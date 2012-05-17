@@ -1,4 +1,4 @@
-from itertools import izip
+from future_builtins import zip
 
 from django.core.exceptions import FieldError
 from django.db import transaction
@@ -261,12 +261,12 @@ class SQLCompiler(object):
         result = []
         if opts is None:
             opts = self.query.model._meta
+        # Skip all proxy to the root proxied model
+        opts = opts.concrete_model._meta
         qn = self.quote_name_unless_alias
         qn2 = self.connection.ops.quote_name
         aliases = set()
         only_load = self.deferred_to_columns()
-        # Skip all proxy to the root proxied model
-        proxied_model = opts.concrete_model
 
         if start_alias:
             seen = {None: start_alias}
@@ -277,12 +277,9 @@ class SQLCompiler(object):
                 try:
                     alias = seen[model]
                 except KeyError:
-                    if model is proxied_model:
-                        alias = start_alias
-                    else:
-                        link_field = opts.get_ancestor_link(model)
-                        alias = self.query.join((start_alias, model._meta.db_table,
-                                link_field.column, model._meta.pk.column))
+                    link_field = opts.get_ancestor_link(model)
+                    alias = self.query.join((start_alias, model._meta.db_table,
+                            link_field.column, model._meta.pk.column))
                     seen[model] = alias
             else:
                 # If we're starting from the base model of the queryset, the
@@ -882,7 +879,7 @@ class SQLInsertCompiler(SQLCompiler):
             placeholders = [["%s"] * len(fields)]
         else:
             placeholders = [
-                [self.placeholder(field, v) for field, v in izip(fields, val)]
+                [self.placeholder(field, v) for field, v in zip(fields, val)]
                 for val in values
             ]
         if self.return_id and self.connection.features.can_return_id_from_insert:
@@ -899,7 +896,7 @@ class SQLInsertCompiler(SQLCompiler):
         else:
             return [
                 (" ".join(result + ["VALUES (%s)" % ", ".join(p)]), vals)
-                for p, vals in izip(placeholders, params)
+                for p, vals in zip(placeholders, params)
             ]
 
     def execute_sql(self, return_id=False):
@@ -1085,7 +1082,7 @@ def empty_iter():
     """
     Returns an iterator containing no results.
     """
-    yield iter([]).next()
+    yield next(iter([]))
 
 
 def order_modified_iter(cursor, trim, sentinel):

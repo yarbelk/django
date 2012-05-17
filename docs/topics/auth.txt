@@ -714,11 +714,11 @@ Django provides two functions in :mod:`django.contrib.auth`:
         user = authenticate(username='john', password='secret')
         if user is not None:
             if user.is_active:
-                print "You provided a correct username and password!"
+                print("You provided a correct username and password!")
             else:
-                print "Your account has been disabled!"
+                print("Your account has been disabled!")
         else:
-            print "Your username and password were incorrect."
+            print("Your username and password were incorrect.")
 
 .. function:: login()
 
@@ -1242,7 +1242,7 @@ includes a few other useful built-in views located in
     .. code-block:: html+django
 
         Someone asked for password reset for email {{ email }}. Follow the link below:
-        {{ protocol}}://{{ site_name }}{% url 'auth_password_reset_confirm' uidb36=uid token=token %}
+        {{ protocol}}://{{ domain }}{% url 'password_reset_confirm' uidb36=uid token=token %}
 
     The same template context is used for subject template. Subject must be
     single line plain text string.
@@ -1892,7 +1892,7 @@ A full authorization implementation can be found in
 `django/contrib/auth/backends.py`_, which is the default backend and queries
 the ``auth_permission`` table most of the time.
 
-.. _django/contrib/auth/backends.py: https://code.djangoproject.com/browser/django/trunk/django/contrib/auth/backends.py
+.. _django/contrib/auth/backends.py: https://github.com/django/django/blob/master/django/contrib/auth/backends.py
 
 .. _anonymous_auth:
 

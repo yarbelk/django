@@ -166,7 +166,7 @@ class CustomOptionsTestRunner(simple.DjangoTestSuiteRunner):
         self.option_c = option_c
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
-        print "%s:%s:%s" % (self.option_a, self.option_b, self.option_c)
+        print("%s:%s:%s" % (self.option_a, self.option_b, self.option_c))
 
 
 class CustomTestRunnerOptionsTests(AdminScriptTestCase):
@@ -296,11 +296,11 @@ class AutoIncrementResetTest(TransactionTestCase):
                      "tests")
     def test_autoincrement_reset1(self):
         p = Person.objects.create(first_name='Jack', last_name='Smith')
-        self.assertEquals(p.pk, 1)
+        self.assertEqual(p.pk, 1)
 
     @unittest.skipIf(connection.vendor == 'oracle',
                      "Oracle's auto-increment fields are not reset between "
                      "tests")
     def test_autoincrement_reset2(self):
         p = Person.objects.create(first_name='Jack', last_name='Smith')
-        self.assertEquals(p.pk, 1)
+        self.assertEqual(p.pk, 1)

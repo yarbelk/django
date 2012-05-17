@@ -1,8 +1,5 @@
 import os
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from io import BytesIO
 
 from django.utils.encoding import smart_str, smart_unicode
 from django.core.files.utils import FileProxyMixin
@@ -89,7 +86,7 @@ class File(FileProxyMixin):
         # Iterate over this file-like object by newlines
         buffer_ = None
         for chunk in self.chunks():
-            chunk_buffer = StringIO(chunk)
+            chunk_buffer = BytesIO(chunk)
 
             for line in chunk_buffer:
                 if buffer_:
@@ -129,7 +126,7 @@ class ContentFile(File):
     """
     def __init__(self, content, name=None):
         content = content or ''
-        super(ContentFile, self).__init__(StringIO(content), name=name)
+        super(ContentFile, self).__init__(BytesIO(content), name=name)
         self.size = len(content)
 
     def __str__(self):

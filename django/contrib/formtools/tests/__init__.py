@@ -13,9 +13,6 @@ from django.utils import unittest
 from django.contrib.formtools.tests.wizard import *
 from django.contrib.formtools.tests.forms import *
 
-warnings.filterwarnings('ignore', category=PendingDeprecationWarning,
-                        module='django.contrib.formtools.wizard')
-
 success_string = "Done was called!"
 
 class TestFormPreview(preview.FormPreview):
@@ -121,8 +118,9 @@ class PreviewTests(TestCase):
         self.test_data.update({'stage':2})
         hash = self.preview.security_hash(None, TestForm(self.test_data))
         self.test_data.update({'hash':hash, 'bool1':u'False'})
-        response = self.client.post('/preview/', self.test_data)
-        self.assertEqual(response.content, success_string)
+        with warnings.catch_warnings(record=True):
+            response = self.client.post('/preview/', self.test_data)
+            self.assertEqual(response.content, success_string)
 
     def test_form_submit_good_hash(self):
         """
@@ -231,6 +229,16 @@ class WizardTests(TestCase):
             '2-random_crap': 'blah blah',
         }
     )
+
+    def setUp(self):
+        super(WizardTests, self).setUp()
+        self.save_warnings_state()
+        warnings.filterwarnings('ignore', category=DeprecationWarning,
+                                module='django.contrib.formtools.wizard')
+
+    def tearDown(self):
+        super(WizardTests, self).tearDown()
+        self.restore_warnings_state()
 
     def test_step_starts_at_zero(self):
         """

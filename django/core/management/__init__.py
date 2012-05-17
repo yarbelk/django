@@ -299,7 +299,7 @@ class ManagementUtility(object):
 
         # subcommand
         if cword == 1:
-            print ' '.join(sorted(filter(lambda x: x.startswith(curr), subcommands)))
+            print(' '.join(sorted(filter(lambda x: x.startswith(curr), subcommands))))
         # subcommand options
         # special case: the 'help' subcommand has no options
         elif cwords[0] in subcommands and cwords[0] != 'help':
@@ -333,7 +333,7 @@ class ManagementUtility(object):
                 # append '=' to options which require args
                 if option[1]:
                     opt_label += '='
-                print opt_label
+                print(opt_label)
         sys.exit(1)
 
     def execute(self):
@@ -395,7 +395,7 @@ def setup_environ(settings_mod, original_settings_path=None):
         "you likely need to update your 'manage.py'; "
         "please see the Django 1.4 release notes "
         "(https://docs.djangoproject.com/en/dev/releases/1.4/).",
-        PendingDeprecationWarning)
+        DeprecationWarning)
 
     # Add this project to sys.path so that it's importable in the conventional
     # way. For example, if this file (manage.py) lives in a directory
@@ -451,7 +451,7 @@ def execute_manager(settings_mod, argv=None):
         "you likely need to update your 'manage.py'; "
         "please see the Django 1.4 release notes "
         "(https://docs.djangoproject.com/en/dev/releases/1.4/).",
-        PendingDeprecationWarning)
+        DeprecationWarning)
 
     setup_environ(settings_mod)
     utility = ManagementUtility(argv)

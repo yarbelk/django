@@ -25,10 +25,11 @@ from __future__ import absolute_import
 from django.conf import settings
 from django.core import mail
 from django.test import Client, TestCase, RequestFactory
+from django.test.utils import override_settings
 
 from .views import get_view
 
-
+@override_settings(PASSWORD_HASHERS=('django.contrib.auth.hashers.SHA1PasswordHasher',))
 class ClientTest(TestCase):
     fixtures = ['testdata.json']
 
@@ -377,7 +378,7 @@ class ClientTest(TestCase):
 
         # Get the page without logging in. Should result in 403.
         response = self.client.get('/test_client/permission_protected_view_exception/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # Log in
         login = self.client.login(username='testclient', password='password')
@@ -385,7 +386,7 @@ class ClientTest(TestCase):
 
         # Log in with wrong permissions. Should result in 403.
         response = self.client.get('/test_client/permission_protected_view_exception/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_view_with_method_permissions(self):
         "Request a page that is protected with a @permission_required method"

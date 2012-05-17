@@ -3,11 +3,7 @@ import unicodedata
 import warnings
 from gzip import GzipFile
 from htmlentitydefs import name2codepoint
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from io import BytesIO
 
 from django.utils.encoding import force_unicode
 from django.utils.functional import allow_lazy, SimpleLazyObject
@@ -30,7 +26,7 @@ def wrap(text, width):
     text = force_unicode(text)
     def _generator():
         it = iter(text.split(' '))
-        word = it.next()
+        word = next(it)
         yield word
         pos = len(word) - word.rfind('\n') - 1
         for word in it:
@@ -206,14 +202,14 @@ class Truncator(SimpleLazyObject):
 
 def truncate_words(s, num, end_text='...'):
     warnings.warn('This function has been deprecated. Use the Truncator class '
-        'in django.utils.text instead.', category=PendingDeprecationWarning)
+        'in django.utils.text instead.', category=DeprecationWarning)
     truncate = end_text and ' %s' % end_text or ''
     return Truncator(s).words(num, truncate=truncate)
 truncate_words = allow_lazy(truncate_words, unicode)
 
 def truncate_html_words(s, num, end_text='...'):
     warnings.warn('This function has been deprecated. Use the Truncator class '
-        'in django.utils.text instead.', category=PendingDeprecationWarning)
+        'in django.utils.text instead.', category=DeprecationWarning)
     truncate = end_text and ' %s' % end_text or ''
     return Truncator(s).words(num, truncate=truncate, html=True)
 truncate_html_words = allow_lazy(truncate_html_words, unicode)
@@ -277,7 +273,7 @@ phone2numeric = allow_lazy(phone2numeric)
 # From http://www.xhaus.com/alan/python/httpcomp.html#gzip
 # Used with permission.
 def compress_string(s):
-    zbuf = StringIO()
+    zbuf = BytesIO()
     zfile = GzipFile(mode='wb', compresslevel=6, fileobj=zbuf)
     zfile.write(s)
     zfile.close()

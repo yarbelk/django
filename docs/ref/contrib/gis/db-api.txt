@@ -76,7 +76,7 @@ transform procedure::
     >>> z = Zipcode(code=78212, poly=poly_3084)
     >>> z.save()
     >>> from django.db import connection
-    >>> print connection.queries[-1]['sql'] # printing the last SQL statement executed (requires DEBUG=True)
+    >>> print(connection.queries[-1]['sql']) # printing the last SQL statement executed (requires DEBUG=True)
     INSERT INTO "geoapp_zipcode" ("code", "poly") VALUES (78212, ST_Transform(ST_GeomFromWKB('\\001 ... ', 3084), 4326))
 
 Thus, geometry parameters may be passed in using the ``GEOSGeometry`` object, WKT
@@ -215,7 +215,7 @@ Then distance queries may be performed as follows::
     >>> qs = SouthTexasCity.objects.filter(point__distance_gte=(pnt, D(mi=20)))
     >>> qs = SouthTexasCity.objects.filter(point__distance_gte=(pnt, D(chain=100)))
 
-__ https://code.djangoproject.com/browser/django/trunk/django/contrib/gis/tests/distapp/models.py
+__ https://github.com/django/django/blob/master/django/contrib/gis/tests/distapp/models.py
 
 .. _compatibility-table:
 

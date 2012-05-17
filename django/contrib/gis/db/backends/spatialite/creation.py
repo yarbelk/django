@@ -24,7 +24,7 @@ class SpatiaLiteCreation(DatabaseCreation):
             test_db_repr = ''
             if verbosity >= 2:
                 test_db_repr = " ('%s')" % test_database_name
-            print "Creating test database for alias '%s'%s..." % (self.connection.alias, test_db_repr)
+            print("Creating test database for alias '%s'%s..." % (self.connection.alias, test_db_repr))
 
         self._create_test_db(verbosity, autoclobber)
 
@@ -120,12 +120,9 @@ class SpatiaLiteCreation(DatabaseCreation):
 
             # Opening up the SpatiaLite SQL initialization file and executing
             # as a script.
-            sql_fh = open(spatialite_sql, 'r')
-            try:
+            with open(spatialite_sql, 'r') as sql_fh:
                 cur = self.connection._cursor()
                 cur.executescript(sql_fh.read())
-            finally:
-                sql_fh.close()
 
     def spatialite_init_file(self):
         # SPATIALITE_SQL may be placed in settings to tell GeoDjango

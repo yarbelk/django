@@ -173,7 +173,7 @@ class Token(object):
                 sentinal = bit[2] + ')'
                 trans_bit = [bit]
                 while not bit.endswith(sentinal):
-                    bit = bits.next()
+                    bit = next(bits)
                     trans_bit.append(bit)
                 bit = ' '.join(trans_bit)
             split.append(bit)
@@ -486,7 +486,7 @@ constant_string = constant_string.replace("\n", "")
 filter_raw_string = r"""
 ^(?P<constant>%(constant)s)|
 ^(?P<var>[%(var_chars)s]+|%(num)s)|
- (?:%(filter_sep)s
+ (?:\s*%(filter_sep)s\s*
      (?P<filter_name>\w+)
          (?:%(arg_sep)s
              (?:

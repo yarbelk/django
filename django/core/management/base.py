@@ -6,6 +6,7 @@ be executed through ``django-admin.py`` or ``manage.py``).
 import os
 import sys
 
+from io import BytesIO
 from optparse import make_option, OptionParser
 import traceback
 
@@ -198,9 +199,9 @@ class BaseCommand(object):
         """
         Try to execute this command, performing model validation if
         needed (as controlled by the attribute
-        ``self.requires_model_validation``). If the command raises a
-        ``CommandError``, intercept it and print it sensibly to
-        stderr.
+        ``self.requires_model_validation``, except if force-skipped). If the
+        command raises a ``CommandError``, intercept it and print it sensibly
+        to stderr.
         """
         show_traceback = options.get('traceback', False)
 
@@ -226,7 +227,7 @@ class BaseCommand(object):
         try:
             self.stdout = options.get('stdout', sys.stdout)
             self.stderr = options.get('stderr', sys.stderr)
-            if self.requires_model_validation:
+            if self.requires_model_validation and not options.get('skip_validation'):
                 self.validate()
             output = self.handle(*args, **options)
             if output:
@@ -258,11 +259,7 @@ class BaseCommand(object):
 
         """
         from django.core.management.validation import get_validation_errors
-        try:
-            from cStringIO import StringIO
-        except ImportError:
-            from StringIO import StringIO
-        s = StringIO()
+        s = BytesIO()
         num_errors = get_validation_errors(s, app)
         if num_errors:
             s.seek(0)

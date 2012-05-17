@@ -1242,8 +1242,10 @@ class OldFormForXTests(TestCase):
         # it comes to validation. This specifically tests that #6302 is fixed for
         # both file fields and image fields.
 
-        image_data = open(os.path.join(os.path.dirname(__file__), "test.png"), 'rb').read()
-        image_data2 = open(os.path.join(os.path.dirname(__file__), "test2.png"), 'rb').read()
+        with open(os.path.join(os.path.dirname(__file__), "test.png"), 'rb') as fp:
+            image_data = fp.read()
+        with open(os.path.join(os.path.dirname(__file__), "test2.png"), 'rb') as fp:
+            image_data2 = fp.read()
 
         f = ImageFileForm(
                 data={'description': u'An image'},
@@ -1369,19 +1371,6 @@ class OldFormForXTests(TestCase):
         instance = f.save()
         self.assertEqual(instance.image.name, 'foo/test4.png')
         instance.delete()
-
-        # Test image field when cStringIO is not available
-        from django.forms import fields
-        from StringIO import StringIO
-        old_StringIO = fields.StringIO
-        fields.StringIO = StringIO
-        try:
-            f = ImageFileForm(
-                data={'description': u'An image'},
-                files={'image': SimpleUploadedFile('test.png', image_data)})
-            self.assertEqual(f.is_valid(), True)
-        finally:
-            fields.StringIO = old_StringIO
 
     def test_media_on_modelform(self):
         # Similar to a regular Form class you can define custom media to be used on
