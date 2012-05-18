@@ -37,6 +37,7 @@ from .py.tests import PYLocalFlavorTests
 from .ro.tests import ROLocalFlavorTests
 from .ru.tests import RULocalFlavorTests
 from .se.tests import SELocalFlavorTests
+from .sg.tests import SGLocalFlavorTests
 from .si.tests import SILocalFlavorTests
 from .sk.tests import SKLocalFlavorTests
 from .tr.tests import TRLocalFlavorTests

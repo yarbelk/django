@@ -43,7 +43,9 @@ class SGPhoneValidator(RegexValidator):
     message = _('Enter a valid phone number'),
     regex = phone_re
 
-    def __call__(self,value):
+    def __call__(self,value,mobile_phone_only=False):
+        if mobile_phone_only:
+            self.regex = mobile_phone_re
         super(SGPhoneValidator,self).__call__(value)
 
 validate_SG_phone = SGPhoneValidator()
@@ -97,7 +99,6 @@ class SGPhoneNumberField(Field):
         value = self.to_python(value)
         self.validate(value)
         self.run_validators(value)
-
         v_search = phone_re.search(value)
         if not v_search:
             raise ValidationError(self.default_error_messages['invalid'])
