@@ -43,9 +43,7 @@ class SGPhoneValidator(RegexValidator):
     message = _('Enter a valid phone number'),
     regex = phone_re
 
-    def __call__(self,value,mobile_phone_only=False):
-        if mobile_phone_only:
-            self.regex = mobile_phone_re
+    def __call__(self,value):
         super(SGPhoneValidator,self).__call__(value)
 
 validate_SG_phone = SGPhoneValidator()
@@ -73,6 +71,8 @@ class SGPostCodeField(Field):
     validators = [validate_SG_postcode]
 
     def to_python(self,value):
+        if not value:
+            return u''
         return value.strip()
 
     def clean(self,value):
@@ -93,6 +93,8 @@ class SGPhoneNumberField(Field):
     validators = [validate_SG_phone]
 
     def to_python(self,value):
+        if not value:
+            return u''
         return value.strip()
 
     def clean(self,value):
@@ -119,6 +121,8 @@ class SGNationalRegistrationIdentityCard(Field):
     validators = [RegexValidator(nric_re,code='invalid')]
 
     def to_python(self,value):
+        if not value:
+            return u''
         return value.strip()
 
     def validate(self, value):
